@@ -33,7 +33,7 @@ userController.signUp = function (req, res) {
 }
 
 userController.getUserById = function (req, res) {
-   Post.findOne({_id : req.params.id} , (err  , doc)=>{
+   User.findOne({_id : req.params.id} , (err  , doc)=>{
         if(err){
             res.status(404).send(err);
         }
