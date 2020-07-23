@@ -1,6 +1,8 @@
 var Post = require('../models/posts.model');
 var postController = {};
 var ObjectId = require('mongoose').Types.ObjectId;
+var User = require('../models/user.model');
+likesarray = [];
 
 postController.addPost = function (req, res) {
     console.log("req body of post is  =======>", req.body);
@@ -49,18 +51,31 @@ postController.getUserByPostId = function (req, res) {
     });
 }
 
-postController.updateUserById = function (req, res) {
-    console.log('req.body ============================>', req.body)
-    if (!ObjectId.isValid(req.params.id))
-        return res.status(400).send(`Id not found : ${req.params.id}`);
+postController.updatePostById = function (req, res) {
+    console.log('req.body ============================>', req.body);
+
+    if(likesarray.indexOf(req.body.userId) === -1) {
+        likesarray.push(req.body.userId);
+        console.log(likesarray);
+    }
+    else {
+        const id = req.body.userId;
+        const removableId = likesarray.indexOf(id);
+        console.log("the removableId id ------------->", removableId);
+        if (removableId > -1) {
+            console.log('the called');
+            likesarray.splice(removableId, 1);
+        }
+    }
+    console.log('the likesarray is ===========>', likesarray);
+
+
+    if (!ObjectId.isValid(req.body.id))
+        return res.status(400).send(`Id not found : ${req.body.id}`);
     var emp = {
-        userId: req.body.userId,
-        time: req.body.time,
-        discription: req.body.discription,
-        image: req.body.image,
-        like: req.body.like
+        likes: likesarray,
     };
-    Post.findByIdAndUpdate(req.params.id, { $set: emp }, { new: true }, (err, doc) => {
+    Post.findByIdAndUpdate(req.body.id, { $set: emp }, { new: true }, (err, doc) => {
         if (!err) { 
             res.send(doc);
         }

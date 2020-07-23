@@ -7,7 +7,8 @@ var PostSchema = new Schema({
 	time: {type: String},
 	discription: {type: String},
 	image: {type: String},
-	like:{type: Number}
+	likes: { type: Array },
+	likesCount: {type: Number}
 });
 
 

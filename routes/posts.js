@@ -8,7 +8,7 @@ router.post('/addPost', postController.addPost);
 router.get('/get-all-post', postController.getallPost);
 
 router.get('/get-user-by-post-id/:id', postController.getUserByPostId);
-router.put('/updateUserById/:id', postController.updateUserById);
+router.put('/updateUserById', postController.updatePostById);
 
 module.exports = router;
 
