@@ -2,7 +2,7 @@ var Post = require('../models/posts.model');
 var postController = {};
 var ObjectId = require('mongoose').Types.ObjectId;
 var User = require('../models/user.model');
-likesarray = [];
+// likesarray = [];
 
 postController.addPost = function (req, res) {
     console.log("req body of post is  =======>", req.body);
@@ -53,33 +53,49 @@ postController.getUserByPostId = function (req, res) {
 
 postController.updatePostById = function (req, res) {
     console.log('req.body ============================>', req.body);
+    // console.log('req.body ============================>', req.body.id.likes.includes(req.body.userId));
+    // // console.log('req.body ============================>',      req.body.id.likes.push(req.body.userId));
+    // console.log('req.body ============================>', req.body);
+    // //
 
-    if(likesarray.indexOf(req.body.userId) === -1) {
-        likesarray.push(req.body.userId);
-        console.log(likesarray);
+    if(req.body.id.likes.includes(req.body.userId)){
+        let index = req.body.id.likes.indexOf(req.body.userId)
+        req.body.id.likes.splice(index, 1)
     }
-    else {
-        const id = req.body.userId;
-        const removableId = likesarray.indexOf(id);
-        console.log("the removableId id ------------->", removableId);
-        if (removableId > -1) {
-            console.log('the called');
-            likesarray.splice(removableId, 1);
-        }
+    else{
+        req.body.id.likes.push(req.body.userId)
     }
-    console.log('the likesarray is ===========>', likesarray);
+    console.log(req.body.id.likes)
+    // if(likesarray.indexOf(req.body.userId) === -1) {
+    //     likesarray.push(req.body.userId);
+    //     console.log(likesarray);
+    // }
+    // else {
+    //     const id = req.body.userId;
+    //     const removableId = likesarray.indexOf(id);
+    //     console.log("the removableId id ------------->", removableId);
+    //     if (removableId > -1) {
+    //         console.log('the called');
+    //         likesarray.splice(removableId, 1);
+    //     }
+    // }
+    // console.log('the likesarray is ===========>', likesarray);
 
 
-    if (!ObjectId.isValid(req.body.id))
-        return res.status(400).send(`Id not found : ${req.body.id}`);
+    // if (!ObjectId.isValid(req.body.id))
+    //     return res.status(400).send(`Id not found : ${req.body.id}`);
     var emp = {
-        likes: likesarray,
+        likes: req.body.id.likes,
     };
-    Post.findByIdAndUpdate(req.body.id, { $set: emp }, { new: true }, (err, doc) => {
+    let item = req.body.id
+// {$set : {likes : req.body.id.likes}}
+    console.log("item, =====+>", item)
+    Post.findOneAndUpdate({_id:  req.body.id._id},item, {upsert: true, new: true }, (err, doc) => {
         if (!err) { 
             res.send(doc);
         }
-        else { 
+        else {
+            console.log(err) 
             console.log('Error in updateUserById :' + JSON.stringify(err, undefined, 2)); 
         }
     });   
