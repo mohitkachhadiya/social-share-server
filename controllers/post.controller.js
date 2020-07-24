@@ -54,9 +54,10 @@ postController.getUserByPostId = function (req, res) {
 postController.updatePostById = function (req, res) {
     console.log('req.body ============================>', req.body);
 
+    
     if(likesarray.indexOf(req.body.userId) === -1) {
         likesarray.push(req.body.userId);
-        console.log(likesarray);
+        console.log("the likesarray of the data the===========>", likesarray);
     }
     else {
         const id = req.body.userId;
@@ -65,8 +66,9 @@ postController.updatePostById = function (req, res) {
         if (removableId > -1) {
             console.log('the called');
             likesarray.splice(removableId, 1);
-        }
-    }
+        }   
+    }               
+
     console.log('the likesarray is ===========>', likesarray);
 
 
